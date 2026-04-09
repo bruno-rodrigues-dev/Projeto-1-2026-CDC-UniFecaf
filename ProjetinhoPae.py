@@ -2,11 +2,11 @@ class Usuario():
     def __init__(self, email, senha):
         self.email = email
         self.senha = senha
-
+#aqui é a classe usuario e tals
 class Repo():
     def __init__(self):
         self.usuarios = []
-
+#esse vai ser o "banco de dados por enquanto", aonde vamos guardar os usuarios
     def mostrarUsuarios(self):
         n = 1
         for i in self.usuarios:
@@ -22,7 +22,7 @@ class Repo():
                 print('Email já existente!!!')
                 return False
         return True
-repo = Repo()
+repo = Repo() #aqui eu criei um objeto com base na classe Repo (repo de repositorio)
 def menu():
     print('1 - Cadastro')
     print('2 - Login')
@@ -34,7 +34,7 @@ def menu():
         funcaoCadastro()
 
     elif opcao == 2:
-        # funcaoLogin
+        # funcaoLogin, ainda nao fiz
         pass
 
     elif opcao == 0:
