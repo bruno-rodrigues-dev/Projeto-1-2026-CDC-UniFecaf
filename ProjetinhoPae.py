@@ -28,6 +28,18 @@ class Repo():
             if i.vendedor == user.id :
                 print(f'ID do Anuncio: {i.id} - {i.nome} - Preço: {i.preco} | Id Vendedor: {i.vendedor}')
 
+    def editarAnuncio(self, nome, preco, i):
+        i.nome = nome
+        i.preco = preco
+        print('Item Editado')
+
+    def buscarAnuncio(self, id, user):
+        for i in self.anuncios:
+            if (i.id == id) and (i.vendedor == user.id):
+                return i
+        else:
+            return None
+
     def addUsuarioRepo(self, usuario):
         self.next_user_id += 1
         self.usuarios.append(usuario)
@@ -35,6 +47,7 @@ class Repo():
     def addAnuncioRepo(self, anuncio):
         self.next_anuncio_id += 1
         self.anuncios.append(anuncio)
+        return True
 
     def emailExiste(self, email):
         for n in self.usuarios:
@@ -87,14 +100,34 @@ def menuPrincipal(user):
         repo.mostrarAnuncios(user)
 
     elif opcao == 3:
-        pass
+        funcaoEditarAnuncio()
 
     elif opcao == 4:
-        pass
+        funcaoRemoverAnuncio()
 
     elif opcao == 0:
         return False
 
+def funcaoEditarAnuncio():
+    id = int(input('Qual o ID do anuncio que vc quer editar?'))
+    anuncio = repo.buscarAnuncio(id, user)
+    if anuncio:
+        nome = input('Qual o novo nome do anuncio?')
+        preco = float(input('Qual o novo preco do anuncio?'))
+        repo.editarAnuncio(nome, preco, anuncio)
+    else:
+        print('Anuncio Inválido')
+
+def funcaoRemoverAnuncio():
+    id = int(input('Qual o ID do anuncio que vc quer remover?'))
+    anuncio = repo.buscarAnuncio(id, user)
+    if anuncio:
+        simNao = input('Tem certeza que quer remover este anuncio?')
+        if simNao.lower() == 'sim' or simNao.lower() == 's':
+            repo.anuncios.remove(anuncio)
+            print('Anuncio Removido')
+    else:
+        print('Anuncio Inválido')
 
 def funcaoCadastro():
     email = input('Qual o email para cadastro?')
@@ -110,20 +143,21 @@ def funcaoCadastro():
 
 def funcaoLogin ():
     email = input('Qual o seu email de login?')
-    if not repo.emailExiste(email):
-        senha = input('Digite a sua senha:')
-        user = repo.validadorSenha(email, senha)
+    senha = input('Digite a sua senha:')
+    user = repo.validadorSenha(email, senha)
+    if user:
         print('Seja bem vindo: ', user.nome)
         return user
     else:
-        print('Email Inválido!!!')
-        return
+        print('Login Inválido!!!')
+        return None
 
 def criarAnuncio(user):
     nome = input('Qual o nome do anuncio?')
     preco = float(input('Qual o preço do anuncio?'))
     anuncio = Anuncios(repo.next_anuncio_id, user.id, nome, preco)
-    repo.addAnuncioRepo(anuncio)
+    if repo.addAnuncioRepo(anuncio):
+        print('Anuncio Criado com Sucesso')
 
 while True:
     if menuLogin() == False:
