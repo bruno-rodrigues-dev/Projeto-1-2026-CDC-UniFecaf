@@ -100,15 +100,15 @@ def menuPrincipal(user):
         repo.mostrarAnuncios(user)
 
     elif opcao == 3:
-        funcaoEditarAnuncio()
+        funcaoEditarAnuncio(user)
 
     elif opcao == 4:
-        funcaoRemoverAnuncio()
+        funcaoRemoverAnuncio(user)
 
     elif opcao == 0:
         return False
 
-def funcaoEditarAnuncio():
+def funcaoEditarAnuncio(user):
     id = int(input('Qual o ID do anuncio que vc quer editar?'))
     anuncio = repo.buscarAnuncio(id, user)
     if anuncio:
@@ -118,7 +118,7 @@ def funcaoEditarAnuncio():
     else:
         print('Anuncio Inválido')
 
-def funcaoRemoverAnuncio():
+def funcaoRemoverAnuncio(user):
     id = int(input('Qual o ID do anuncio que vc quer remover?'))
     anuncio = repo.buscarAnuncio(id, user)
     if anuncio:
