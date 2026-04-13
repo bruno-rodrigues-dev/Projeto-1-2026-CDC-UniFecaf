@@ -26,7 +26,7 @@ class Repo():
     def mostrarAnuncios(self, user):
         for i in self.anuncios:
             if i.vendedor == user.id :
-                print(f'ID do Anuncio: {i.id} - {i.nome} - Preço: {i.preco} | Id Vendedor: {i.vendedor}')
+                print(f'ID do Anuncio: {i.id} - {i.nome} - Preço: R${i.preco:.2f} | Id Vendedor: {i.vendedor}')
 
     def editarAnuncio(self, nome, preco, i):
         i.nome = nome
