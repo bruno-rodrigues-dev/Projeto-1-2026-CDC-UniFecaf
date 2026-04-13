@@ -84,6 +84,10 @@ def menuLogin():
     elif opcao == 0:
         return False
 
+    else:
+        print('Escolha Inválida')
+    return
+
 def menuPrincipal(user):
     print('1 - Criar Anuncio')
     print('2 - Meus Anuncios')
@@ -107,6 +111,10 @@ def menuPrincipal(user):
 
     elif opcao == 0:
         return False
+
+    else:
+        print('Escolha Inválida')
+    return
 
 def funcaoEditarAnuncio(user):
     id = int(input('Qual o ID do anuncio que vc quer editar?'))
