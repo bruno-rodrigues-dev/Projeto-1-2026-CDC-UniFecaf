@@ -1,10 +1,11 @@
 from main import app
-
+from flask import render_template
 
 # rotas
 @app.route("/")
 def homepage():
-    return "Commercia - Seja Bem-Vindo"
+    return render_template("homepage.html")
+
 
 @app.route("/blog")
 def blog():
