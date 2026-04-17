@@ -9,5 +9,21 @@
     COMMERCIA
 
     Seja Bem-vindo!!!!
+
+    <form method="POST" action="/criar">
+    <input name="nome" placeholder="Nome">
+    <input name="preco" placeholder="Preço">
+    <button type="submit">Enviar</button>
+
+    <h1> </h1>
+    <h1>Anuncios:</h1>
+        
+{% for anuncio in lista %}
+    <div>
+        <h3>Nome: {{ anuncio.nome }}</h3>
+        <p>Preço: R$ {{ anuncio.preco }}</p>
+    </div>
+{% endfor %}
+
 </body>
 </html>
