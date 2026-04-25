@@ -1,29 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Commercia - Seu Estoque</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6f9;
+            color: #2c2c2a;
+        }
+
+        header {
+            background: #185FA5;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ── Formulário de cadastro ── */
+        .card {
+            background: white;
+            border: 0.5px solid #d3d1c7;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #185FA5;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        form input, form select {
+            padding: 8px 12px;
+            border: 0.5px solid #b4b2a9;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f4f6f9;
+            color: #2c2c2a;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        form input:focus, form select:focus {
+            border-color: #185FA5;
+            background: white;
+        }
+
+        form input[name="nome"]     { flex: 2; min-width: 140px; }
+        form input[name="descricao"]{ flex: 3; min-width: 160px; }
+        form input[name="preco"]    { flex: 1; min-width: 100px; }
+        form select                 { flex: 1; min-width: 130px; }
+
+        .btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.15s;
+        }
+        .btn:hover { opacity: 0.85; }
+
+        .btn-primary   { background: #185FA5; color: white; }
+        .btn-edit      { background: #e6f1fb; color: #0c447c; border: 0.5px solid #85b7eb; }
+        .btn-delete    { background: #fcebeb; color: #a32d2d; border: 0.5px solid #f09595; }
+
+        /* ── Tabela ── */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead tr {
+            background: #185FA5;
+            color: white;
+        }
+
+        thead th {
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        tbody tr {
+            border-bottom: 0.5px solid #e8e6df;
+            transition: background 0.1s;
+        }
+
+        tbody tr:hover { background: #f0f4fa; }
+
+        tbody td {
+            padding: 11px 14px;
+            vertical-align: middle;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-eletronicos { background: #e6f1fb; color: #0c447c; }
+        .badge-alimentos   { background: #eaf3de; color: #27500a; }
+        .badge-limpeza     { background: #faeeda; color: #633806; }
+        .badge-outros      { background: #f1efe8; color: #444441; }
+
+        .acoes { display: flex; gap: 8px; }
+
+        .empty {
+            text-align: center;
+            padding: 2.5rem;
+            color: #888780;
+            font-size: 14px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #444441;
+            margin-bottom: 0.75rem;
+        }
+
+        .total-info {
+            font-size: 13px;
+            color: #888780;
+            margin-bottom: 0.75rem;
+        }
+    </style>
 </head>
 <body>
-    COMMERCIA
 
-    Seja Bem-vindo!!!!
+<header>🏪 COMMERCIA — Gestão de Estoque</header>
 
-    <form method="POST" action="/criar">
-    <input name="nome" placeholder="Nome">
-    <input name="preco" placeholder="Preço">
-    <button type="submit">Enviar</button>
+<main>
 
-    <h1> </h1>
-    <h1>Anuncios:</h1>
-        
-{% for anuncio in lista %}
-    <div>
-        <h3>Nome: {{ anuncio.nome }}</h3>
-        <p>Preço: R$ {{ anuncio.preco }}</p>
+    <!-- Formulário de cadastro -->
+    <div class="card">
+        <h2>＋ Cadastrar Novo Produto</h2>
+        <form method="POST" action="/criar">
+            <input type="text" name="nome" placeholder="Nome do produto" required>
+            <input type="text" name="descricao" placeholder="Descrição (cor, marca, estado...)">
+            <input type="text" name="preco" placeholder="Preço (ex: 10.50)" required>
+            <select name="categoria" id="categoria">
+                <option value="1">Eletrônicos</option>
+                <option value="2">Alimentos</option>
+                <option value="3">Limpeza</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
     </div>
-{% endfor %}
+
+    <!-- Tabela de produtos -->
+    <div class="card">
+        <p class="section-title">Produtos Cadastrados</p>
+
+        {% if lista %}
+            <p class="total-info">{{ lista | length }} produto(s) encontrado(s)</p>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto in lista %}
+                        <tr>
+                            <td style="color:#888780;">{{ produto.id }}</td>
+                            <td><strong>{{ produto.nome }}</strong></td>
+                            <td style="color:#5f5e5a;">{{ produto.descricao or '—' }}</td>
+                            <td>
+                                {% set cat = produto.nome_categoria | lower %}
+                                {% if 'eletr' in cat %}
+                                    <span class="badge badge-eletronicos">{{ produto.nome_categoria }}</span>
+                                {% elif 'aliment' in cat %}
+                                    <span class="badge badge-alimentos">{{ produto.nome_categoria }}</span>
+                                {% elif 'limpeza' in cat %}
+                                    <span class="badge badge-limpeza">{{ produto.nome_categoria }}</span>
+                                {% else %}
+                                    <span class="badge badge-outros">{{ produto.nome_categoria }}</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>R$ {{ "%.2f" | format(produto.valor) }}</strong></td>
+                            <td>
+                                <div class="acoes">
+                                    <a href="/editar/{{ produto.id }}">
+                                        <button class="btn btn-edit">✏ Editar</button>
+                                    </a>
+                                    <a href="/deletar/{{ produto.id }}" onclick="return confirm('Deletar {{ produto.nome }}?')">
+                                        <button class="btn btn-delete">🗑 Deletar</button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty">
+                Nenhum produto cadastrado ainda. Use o formulário acima para adicionar!
+            </div>
+        {% endif %}
+    </div>
+
+</main>
 
 </body>
 </html>
