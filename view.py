@@ -1,8 +1,7 @@
 from app import app
 from flask import render_template, redirect
 from flask import request, url_for
-from database import ligar_banco
-# sql alchemy
+from banco_de_dados.database import ligar_banco
 
 @app.route("/")
 def homepage():
@@ -10,9 +9,10 @@ def homepage():
     cursor = db.cursor(dictionary=True)
     
     sql = """
-        SELECT p.id, p.nome, p.descricao, p.valor, c.nome_categoria 
+        SELECT p.id, p.nome, p.descricao, p.valor, c.nome_categoria, m.nome_marca
         FROM produtos p
         INNER JOIN categorias c ON p.categoria_id = c.id
+        INNER JOIN marcas m ON p.marca_id = m.id
     """
     cursor.execute(sql)
     lista_produtos = cursor.fetchall()
@@ -28,10 +28,11 @@ def criar():
         descricao = request.form["descricao"]
         preco = float(request.form["preco"])
         cat_id = request.form["categoria"]
+        marca_id = request.form["marca"]
         db = ligar_banco()
         cursor = db.cursor()
-        sql = "INSERT INTO produtos (nome, descricao, valor, categoria_id) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql, (nome, descricao, preco, cat_id))
+        sql = "INSERT INTO produtos (nome, descricao, valor, categoria_id, marca_id) VALUES (%s, %s, %s, %s, %s)"
+        cursor.execute(sql, (nome, descricao, preco, cat_id, marca_id))
         db.commit()
         cursor.close()
         db.close()
@@ -47,17 +48,19 @@ def editar(id):
         descricao = request.form["descricao"]
         preco = float(request.form["preco"])
         cat_id = request.form["categoria"]
-        sql = "UPDATE produtos SET nome=%s, descricao=%s, valor=%s, categoria_id=%s WHERE id=%s"
-        cursor.execute(sql, (nome, descricao, preco, cat_id, id))
+        marca_id = request.form["marca"]
+        sql = "UPDATE produtos SET nome=%s, descricao=%s, valor=%s, categoria_id=%s, marca_id WHERE id=%s"
+        cursor.execute(sql, (nome, descricao, preco, cat_id, marca_id, id))
         db.commit()
         cursor.close()
         db.close()
         return redirect(url_for("homepage"))
     
     sql = """
-        SELECT p.id, p.nome, p.descricao, p.valor, p.categoria_id, c.nome_categoria 
+        SELECT p.id, p.nome, p.descricao, p.valor, p.categoria_id, c.nome_categoria, m.nome_marca
         FROM produtos p
         INNER JOIN categorias c ON p.categoria_id = c.id
+        INNER JOIN marcas ON p.marca_id = m.id
         WHERE p.id = %s
     """
     cursor.execute(sql, (id,))
@@ -66,6 +69,7 @@ def editar(id):
     cursor.close()
     db.close()
     return render_template("editar.html", produto=produto)
+
 
 @app.route("/deletar/<int:id>")
 def deletar(id):
