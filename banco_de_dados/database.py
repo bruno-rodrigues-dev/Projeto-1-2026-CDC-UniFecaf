@@ -5,7 +5,7 @@ def ligar_banco():
         connection = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='2007Pedro@',
+            password='root',
             database='projeto_unifecaf'
         )
         return connection
