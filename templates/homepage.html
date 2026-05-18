@@ -100,6 +100,16 @@
             min-width:120px;
         }
 
+        .search-box{
+            display:flex;
+            gap:10px;
+            width:100%;
+        }
+
+        .search-box input{
+            flex:1;
+        }
+
         .btn{
             border:none;
             padding:12px 18px;
@@ -247,6 +257,31 @@
 </header>
 
 <main>
+
+    <!-- PESQUISA -->
+    <div class="card">
+
+        <h2>🔎 Pesquisar Produtos</h2>
+
+        <form method="GET" action="/pesquisa">
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    name="pesquisa"
+                    placeholder="Digite o nome do produto..."
+                >
+
+                <button type="submit" class="btn btn-primary">
+                    Pesquisar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
     <!-- CADASTRO -->
     <div class="card">

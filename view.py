@@ -13,6 +13,7 @@ def homepage():
         FROM produtos p
         INNER JOIN categorias c ON p.categoria_id = c.id
         INNER JOIN marcas m ON p.marca_id = m.id
+        order by p.id
     """
     cursor.execute(sql)
     lista_produtos = cursor.fetchall()
@@ -49,7 +50,7 @@ def editar(id):
         preco = float(request.form["preco"])
         cat_id = request.form["categoria"]
         marca_id = request.form["marca"]
-        sql = "UPDATE produtos SET nome=%s, descricao=%s, valor=%s, categoria_id=%s, marca_id WHERE id=%s"
+        sql = "UPDATE produtos SET nome=%s, descricao=%s, valor=%s, categoria_id=%s, marca_id=%s WHERE id=%s"
         cursor.execute(sql, (nome, descricao, preco, cat_id, marca_id, id))
         db.commit()
         cursor.close()
@@ -57,10 +58,10 @@ def editar(id):
         return redirect(url_for("homepage"))
     
     sql = """
-        SELECT p.id, p.nome, p.descricao, p.valor, p.categoria_id, c.nome_categoria, m.nome_marca
+        SELECT p.id, p.nome, p.descricao, p.valor, p.categoria_id, p.marca_id, c.nome_categoria, m.nome_marca
         FROM produtos p
         INNER JOIN categorias c ON p.categoria_id = c.id
-        INNER JOIN marcas ON p.marca_id = m.id
+        INNER JOIN marcas m ON p.marca_id = m.id
         WHERE p.id = %s
     """
     cursor.execute(sql, (id,))
@@ -80,3 +81,25 @@ def deletar(id):
     cursor.close()
     db.close()
     return redirect("/")
+
+@app.route("/pesquisa")
+def pesquisa():
+    pesquisa = request.args.get("pesquisa")
+
+    db = ligar_banco()
+    cursor = db.cursor(dictionary=True)
+
+    sql = """
+        SELECT p.id, p.nome, p.descricao, p.valor, p.categoria_id, c.nome_categoria, m.nome_marca
+        FROM produtos p
+        INNER JOIN categorias c ON p.categoria_id = c.id
+        INNER JOIN marcas m ON p.marca_id = m.id
+        WHERE p.nome like %s
+    """
+    cursor.execute(sql, (f"%{pesquisa}%",))
+
+    produtos = cursor.fetchall()
+    cursor.close()
+    db.close()
+    
+    return render_template("homepage.html", lista=produtos)
