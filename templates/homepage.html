@@ -283,39 +283,42 @@
 
     </div>
 
-    <!-- CADASTRO -->
-    <div class="card">
+   <!-- CADASTRO -->
+<div class="card">
 
-        <h2>＋ Cadastrar Novo Produto</h2>
+    <h2>＋ Cadastrar Novo Produto</h2>
 
-        <form method="POST" action="/criar">
+    <form method="POST" action="/criar">
 
-            <input type="text" name="nome" placeholder="Nome do produto" required>
+        <input type="text" name="nome" placeholder="Nome do produto" required>
 
-            <input type="text" name="descricao" placeholder="Descrição">
+        <input type="text" name="descricao" placeholder="Descrição">
 
-            <input type="text" name="preco" placeholder="Preço" required>
+        <input type="text" name="preco" placeholder="Preço" required>
 
-            <select name="categoria">
-                <option value="1">Eletrônicos</option>
-                <option value="2">Alimentos</option>
-                <option value="3">Limpeza</option>
-            </select>
+        <!-- CATEGORIA -->
+        <input
+            type="text"
+            name="categoria"
+            placeholder="Categoria"
+            required
+        >
 
-            <select name="marca">
-                <option value="1">Samsung</option>
-                <option value="2">LG</option>
-                <option value="3">Nike</option>
-                <option value="4">Apple</option>
-            </select>
+        <!-- MARCA -->
+        <input
+            type="text"
+            name="marca"
+            placeholder="Marca"
+            required
+        >
 
-            <button type="submit" class="btn btn-primary">
-                Cadastrar
-            </button>
+        <button type="submit" class="btn btn-primary">
+            Cadastrar
+        </button>
 
-        </form>
+    </form>
 
-    </div>
+</div>
 
     <!-- TABELA -->
     <div class="card">

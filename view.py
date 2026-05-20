@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, redirect
 from flask import request, url_for
-from banco_de_dados.database import ligar_banco
+from banco_de_dados.database import ligar_banco, validarCat, validarMarca
 
 @app.route("/")
 def homepage():
@@ -30,6 +30,8 @@ def criar():
         preco = float(request.form["preco"])
         cat_id = request.form["categoria"]
         marca_id = request.form["marca"]
+        cat_id = validarCat(cat_id)
+        marca_id = validarMarca(marca_id)
         db = ligar_banco()
         cursor = db.cursor()
         sql = "INSERT INTO produtos (nome, descricao, valor, categoria_id, marca_id) VALUES (%s, %s, %s, %s, %s)"
@@ -50,6 +52,9 @@ def editar(id):
         preco = float(request.form["preco"])
         cat_id = request.form["categoria"]
         marca_id = request.form["marca"]
+        cat_id = validarCat(cat_id)
+        marca_id = validarMarca(marca_id)
+        
         sql = "UPDATE produtos SET nome=%s, descricao=%s, valor=%s, categoria_id=%s, marca_id=%s WHERE id=%s"
         cursor.execute(sql, (nome, descricao, preco, cat_id, marca_id, id))
         db.commit()
